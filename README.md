@@ -100,13 +100,23 @@ Data yang disimpan ke SharedPreferences:
 
 ---
 
-## Menjalankan Proyek
+## Download & Menjalankan Proyek
+
+### Install APK (Android)
+
+Download file APK dari halaman rilis:
+
+[github.com/RaihanAdityaP/IdleGame/releases/tag/v1.0.0](https://github.com/RaihanAdityaP/IdleGame/releases/tag/v1.0.0)
+
+Extract file `.zip`, lalu install `IdleWarungv1.0.0.apk` di perangkat Android. Pastikan opsi **Install from unknown sources** sudah diaktifkan di pengaturan perangkat.
+
+### Jalankan dari Source
 
 Pastikan Flutter SDK sudah terinstall, lalu:
 
 ```bash
-git clone https://github.com/username/idle-warung.git
-cd idle-warung
+git clone https://github.com/RaihanAdityaP/IdleGame.git
+cd IdleGame
 flutter pub get
 flutter run
 ```
@@ -115,4 +125,4 @@ flutter run
 
 ## Lisensi
 
-ReanOffc
+MIT
