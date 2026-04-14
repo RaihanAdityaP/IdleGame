@@ -3,37 +3,12 @@ import 'package:provider/provider.dart';
 import '../core/constants.dart';
 import '../core/game_state.dart';
 import '../core/localization.dart';
-import '../ui/app_bar.dart';
-import '../ui/stats_panel.dart';
-import '../ui/tap_zone.dart';
-import '../ui/shop_panel.dart';
-import '../ui/event_bar.dart';
-import '../ui/settings_screen.dart';
-
-void main() {
-  runApp(const IdleWarungApp());
-}
-
-class IdleWarungApp extends StatelessWidget {
-  const IdleWarungApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => GameState(),
-      child: MaterialApp(
-        title: 'Idle Warung',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: RP.bg,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: const MainScreen(),
-      ),
-    );
-  }
-}
+import 'app_bar.dart';
+import 'stats_panel.dart';
+import 'tap_zone.dart';
+import 'shop_panel.dart';
+import 'event_bar.dart';
+import 'settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -96,7 +71,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _openSettings() {
-    final state = context.read<GameState>(); Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(gameState: state)));
+    final state = context.read<GameState>();
+    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(gameState: state)));
   }
 
   @override
