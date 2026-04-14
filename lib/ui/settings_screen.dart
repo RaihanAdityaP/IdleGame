@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../core/constants.dart';
 import '../core/game_state.dart';
 import '../core/localization.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final GameState gameState;
-  const SettingsScreen({super.key, required this.gameState});
+  const SettingsScreen({super.key});
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -20,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _save() {
-    widget.gameState.setLanguage(_selected);
+    context.read<GameState>().setLanguage(_selected);
     Navigator.pop(context);
   }
 
@@ -32,7 +32,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -48,10 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(L10n.get('settings'), style: px(size: 11, color: RP.blue)),
               ]),
             ),
-
             const SizedBox(height: 24),
-
-            // Language section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -59,7 +55,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(L10n.get('language'), style: px(size: 9, color: RP.white)),
                   const SizedBox(height: 16),
-
                   _LangOption(
                     lang: AppLang.id,
                     label: L10n.get('bahasa_id'),
@@ -75,10 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     selected: _selected,
                     onTap: () => setState(() => _selected = AppLang.en),
                   ),
-
                   const SizedBox(height: 32),
-
-                  // Save button
                   GestureDetector(
                     onTap: _save,
                     child: Container(
@@ -134,8 +126,7 @@ class _LangOption extends StatelessWidget {
           const SizedBox(width: 16),
           Text(label, style: px(size: 9, color: isSelected ? RP.white : RP.grey)),
           const Spacer(),
-          if (isSelected)
-            Icon(Icons.check, color: RP.blue, size: 16),
+          if (isSelected) Icon(Icons.check, color: RP.blue, size: 16),
         ]),
       ),
     );

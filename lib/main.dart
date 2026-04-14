@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/constants.dart';
 import '../core/game_state.dart';
-import '../core/localization.dart';
 import '../ui/app_bar.dart';
 import '../ui/stats_panel.dart';
 import '../ui/tap_zone.dart';
@@ -46,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GameState>().load();
       context.read<GameState>().onEventTriggered = _showEventBanner;
     });
   }
@@ -60,43 +60,8 @@ class _MainScreenState extends State<MainScreen> {
     ));
   }
 
-  void _showResetDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: RP.panel,
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: RP.red, width: 2),
-          borderRadius: BorderRadius.zero,
-        ),
-        title: Text(L10n.get('reset_title'), style: px(size: 10, color: RP.red)),
-        content: Text(L10n.get('reset_body'), style: px(size: 7, color: RP.white)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(L10n.get('batal'), style: px(size: 7, color: RP.grey)),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              await context.read<GameState>().reset();
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: RP.red,
-                  content: Text(L10n.get('reset_success'), style: px(size: 7)),
-                  duration: const Duration(seconds: 2),
-                ));
-              }
-            },
-            child: Text(L10n.get('reset'), style: px(size: 7, color: RP.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _openSettings() {
-    final state = context.read<GameState>(); Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(gameState: state)));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
   }
 
   @override
@@ -107,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            GameAppBar(onReset: _showResetDialog, onSettings: _openSettings),
+            GameAppBar(onSettings: _openSettings),
             StatsPanel(state: state),
             if (state.activeEvent != null) ActiveEventBar(state: state),
             Expanded(child: Center(child: const TapZone())),

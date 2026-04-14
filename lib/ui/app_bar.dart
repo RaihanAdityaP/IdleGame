@@ -3,9 +3,8 @@ import '../core/constants.dart';
 import '../core/localization.dart';
 
 class GameAppBar extends StatelessWidget {
-  final VoidCallback onReset;
   final VoidCallback onSettings;
-  const GameAppBar({super.key, required this.onReset, required this.onSettings});
+  const GameAppBar({super.key, required this.onSettings});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,6 @@ class GameAppBar extends StatelessWidget {
           const SizedBox(width: 10),
           Text(L10n.get('app_title'), style: px(size: 11, color: RP.orange)),
           const Spacer(),
-
-          // Settings button
           GestureDetector(
             onTap: onSettings,
             child: Container(
@@ -32,27 +29,6 @@ class GameAppBar extends StatelessWidget {
                 color: RP.blue.withValues(alpha: 0.1),
               ),
               child: Icon(Icons.settings, color: RP.blue, size: 13),
-            ),
-          ),
-          const SizedBox(width: 8),
-
-          // Reset button
-          GestureDetector(
-            onTap: onReset,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-              decoration: BoxDecoration(
-                border: Border.all(color: RP.red, width: 1.5),
-                color: RP.red.withValues(alpha: 0.1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.refresh, color: RP.red, size: 11),
-                  const SizedBox(width: 4),
-                  Text(L10n.get('reset'), style: px(size: 6, color: RP.red)),
-                ],
-              ),
             ),
           ),
           const SizedBox(width: 10),
