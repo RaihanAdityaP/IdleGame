@@ -24,6 +24,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.pop(context);
   }
 
+  void _showResetDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: RP.panel,
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: RP.red, width: 2),
+          borderRadius: BorderRadius.zero,
+        ),
+        title: Text(L10n.get('reset_title'), style: px(size: 10, color: RP.red)),
+        content: Text(L10n.get('reset_body'), style: px(size: 7, color: RP.white)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(L10n.get('batal'), style: px(size: 7, color: RP.grey)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await context.read<GameState>().reset();
+              if (mounted) Navigator.pop(context);
+            },
+            child: Text(L10n.get('reset'), style: px(size: 7, color: RP.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +111,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text(L10n.get('save'), style: px(size: 10, color: RP.blue)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: _showResetDialog,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        color: RP.red.withValues(alpha: 0.1),
+                        border: Border.all(color: RP.red, width: 2),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(L10n.get('reset'), style: px(size: 10, color: RP.red)),
                     ),
                   ),
                 ],
