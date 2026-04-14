@@ -1,118 +1,120 @@
 # Idle Warung
 
-Idle clicker game sederhana yang dibangun dengan Flutter. Kamu tap, kamu upgrade, warungmu berkembang sendiri.
+> A simple idle clicker game built with Flutter. Tap to earn, upgrade your stall, and watch the coins roll in — even when you're not playing.
 
-Proyek ini dibuat sebagai studi kasus game development dengan Flutter — fokus pada arsitektur yang bersih, game loop yang efisien, dan persistensi data lokal.
+This project was built as a case study in Flutter game development, with a focus on clean architecture, an efficient game loop, and local data persistence.
 
 ---
 
-## Stack
+## Tech Stack
 
-| Teknologi | Kegunaan |
+| Technology | Purpose |
 |---|---|
-| Flutter | UI dan rendering |
-| Dart | Bahasa pemrograman |
+| Flutter | UI and rendering |
+| Dart | Programming language |
 | Provider + ChangeNotifier | State management |
-| SharedPreferences | Persistensi data lokal |
+| SharedPreferences | Local data persistence |
 
 ---
 
-## Fitur
+## Features
 
-- **Auto income** — koin bertambah otomatis setiap 100ms berdasarkan total CPS dari upgrade yang dimiliki
-- **8 upgrade** dengan harga scaling (naik 15% tiap pembelian), dibagi dua kategori: IDLE (auto CPS) dan TAP (manual CPC)
-- **4 tipe random event** — Airdrop, Rush Hour, Pelanggan VIP, dan Bencana — dipicu secara acak setiap 30–90 detik
-- **Milestone reward** — event positif otomatis terpicu saat koin mencapai 1K, 10K, 50K, 200K, dan 1M
-- **Animasi tap** — scale press, pulse border, dan floating number dengan offset horizontal acak
-- **Auto-save** setiap 5 detik dan langsung setelah beli upgrade
+- **Auto income** — coins accumulate every 100ms based on the total CPS from owned upgrades
+- **8 upgrades** with scaling prices (increases 15% per purchase), split into two categories: IDLE (auto CPS) and TAP (manual CPC)
+- **4 random event types** — Airdrop, Rush Hour, VIP Customer, and Disaster — triggered randomly every 30–90 seconds
+- **Milestone rewards** — positive events are automatically triggered when coins reach 1K, 10K, 50K, 200K, and 1M
+- **Tap animations** — scale press, pulse border, and floating numbers with randomized horizontal offset
+- **Auto-save** every 5 seconds and immediately after each upgrade purchase
 
 ---
 
-## Arsitektur
+## Architecture
 
 ```
-Widget Flutter  →  GameState (ChangeNotifier)  →  SharedPreferences
+Flutter Widgets  →  GameState (ChangeNotifier)  →  SharedPreferences
    (UI layer)        (single source of truth)        (local storage)
 ```
 
-Semua widget memanggil `context.watch<GameState>()` dan rebuild otomatis setiap kali state berubah. Tidak ada state lokal di widget selain animasi.
+All widgets call `context.watch<GameState>()` and rebuild automatically whenever state changes. No local widget state exists outside of animations.
 
-### Komponen utama
+### Core Components
 
-- `MainScreen` — root screen, menyatukan semua panel
-- `TapZone` — area tap utama, mengelola `AnimationController` untuk scale dan pulse
-- `ShopPanel` — daftar upgrade yang bisa dibeli
-- `StatsPanel` — menampilkan statistik real-time
-- `ActiveEventBar` — menampilkan event yang sedang aktif beserta countdown
-- `GameState` — semua logika game: timer, upgrade, event, save/load
+| Component | Role |
+|---|---|
+| `MainScreen` | Root screen, assembles all panels |
+| `TapZone` | Primary tap area, manages `AnimationController` for scale and pulse |
+| `ShopPanel` | List of purchasable upgrades |
+| `StatsPanel` | Displays real-time game statistics |
+| `ActiveEventBar` | Shows the currently active event with a live countdown |
+| `GameState` | All game logic: timers, upgrades, events, save/load |
 
 ---
 
-## Sistem Timer
+## Timer System
 
-Game berjalan dengan tiga timer yang berjalan paralel sejak `GameState` diinisialisasi:
+The game runs on three parallel timers that start as soon as `GameState` is initialized:
 
-| Timer | Interval | Fungsi |
+| Timer | Interval | Function |
 |---|---|---|
-| Tick | 100ms | Tambah koin otomatis, cek milestone |
-| Save | 5 detik | Auto-save ke SharedPreferences |
-| Event | 30–90 detik (acak) | Picu random event, jadwal ulang rekursif |
+| Tick | 100ms | Adds coins automatically, checks milestones |
+| Save | 5 seconds | Auto-saves state to SharedPreferences |
+| Event | 30–90 seconds (random) | Triggers a random event, schedules the next recursively |
 
 ---
 
-## Upgrade
+## Upgrades
 
-| Nama | Base Cost | Bonus | Tipe |
+| Name | Base Cost | Bonus | Type |
 |---|---|---|---|
-| Gelas Plastik | 10 | +0.5/s | IDLE |
-| Gerobak Baru | 100 | +3/s | IDLE |
-| Menu Tambahan | 500 | +12/s | IDLE |
-| Pelayan | 2.000 | +40/s | IDLE |
-| Dapur Express | 10.000 | +150/s | IDLE |
-| Spatula Pro | 50 | +5/tap | TAP |
-| Tangan Cepat | 300 | +20/tap | TAP |
-| Resep Rahasia | 1.500 | +80/tap | TAP |
+| Plastic Cup | 10 | +0.5/s | IDLE |
+| New Cart | 100 | +3/s | IDLE |
+| Extra Menu | 500 | +12/s | IDLE |
+| Waiter | 2,000 | +40/s | IDLE |
+| Express Kitchen | 10,000 | +150/s | IDLE |
+| Pro Spatula | 50 | +5/tap | TAP |
+| Quick Hands | 300 | +20/tap | TAP |
+| Secret Recipe | 1,500 | +80/tap | TAP |
 
-Formula harga: `baseCost × 1.15^owned`
+Price formula: `baseCost × 1.15^owned`
 
 ---
 
-## Event
+## Events
 
-| Event | Efek | Durasi |
+| Event | Effect | Duration |
 |---|---|---|
-| Airdrop | Bonus koin instan (`max(value, cps × 10)`) | 4 detik |
-| Rush Hour | CPS ×2 | 15 detik |
-| Pelanggan VIP | Tap ×5 | 20 detik |
-| Bencana | Bayar atau CPS turun 30% | 10 detik |
+| Airdrop | Instant coin bonus (`max(value, cps × 10)`) | 4 seconds |
+| Rush Hour | CPS ×2 | 15 seconds |
+| VIP Customer | Tap ×5 | 20 seconds |
+| Disaster | Pay a penalty or lose 30% CPS | 10 seconds |
 
 ---
 
-## Persistensi Data
+## Data Persistence
 
-Data yang disimpan ke SharedPreferences:
+The following values are saved to SharedPreferences:
 
-- `coins` — jumlah koin saat ini
-- `upgrades` — `owned` count per upgrade dalam format `id:owned,id:owned,...`
-- `milestones` — daftar milestone yang sudah dicapai
+- `coins` — current coin count
+- `upgrades` — `owned` count per upgrade, stored as `id:owned,id:owned,...`
+- `milestones` — list of already-reached milestones
 
-> Catatan desain: yang disimpan adalah nilai `owned` per upgrade, bukan nilai `_baseCps` atau `_baseCpc` secara langsung. Saat `load()`, kedua nilai tersebut dihitung ulang dari `owned`. Ini mencegah data corrupt jika definisi upgrade berubah di versi berikutnya.
+> **Design note:** Only the `owned` count per upgrade is persisted — not `_baseCps` or `_baseCpc` directly. On `load()`, those values are recalculated from `owned`. This prevents data corruption if upgrade definitions change in future versions.
 
 ---
 
-## Download & Menjalankan Proyek
+## Getting Started
 
 ### Install APK (Android)
 
-Download file APK dari halaman rilis:
+Download the APK from the releases page:
 
 [github.com/RaihanAdityaP/IdleGame/releases/tag/v1.0.0](https://github.com/RaihanAdityaP/IdleGame/releases/tag/v1.0.0)
 
-Extract file `.zip`, lalu install `IdleWarungv1.0.0.apk` di perangkat Android. Pastikan opsi **Install from unknown sources** sudah diaktifkan di pengaturan perangkat.
+Extract the `.zip` file, then install `IdleWarungv1.0.0.apk` on your Android device. Make sure **Install from unknown sources** is enabled in your device settings.
 
-### Jalankan dari Source
+### Run from Source
 
-Pastikan Flutter SDK sudah terinstall, lalu:
+Requires Flutter SDK to be installed.
 
 ```bash
 git clone https://github.com/RaihanAdityaP/IdleGame.git
@@ -123,6 +125,6 @@ flutter run
 
 ---
 
-## Lisensi
+## License
 
 MIT
