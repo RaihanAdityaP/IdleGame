@@ -110,7 +110,7 @@ Download the APK from the releases page:
 
 [github.com/RaihanAdityaP/IdleGame/releases](https://github.com/RaihanAdityaP/IdleGame/releases)
 
-Extract the `.zip` file, then install `IdleWarungv1.0.0.apk` on your Android device. Make sure **Install from unknown sources** is enabled in your device settings.
+Extract the `.zip` file, then install `IdleWarungv1.apk` on your Android device. Make sure **Install from unknown sources** is enabled in your device settings.
 
 ### Run from Source
 
